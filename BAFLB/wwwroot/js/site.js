@@ -61,21 +61,19 @@ function _displayUsers(data) {
         select.options.add(newOption);
 
         let tr = tBody.insertRow();
-
+        tr.classList.add('new-row');
         let td1 = tr.insertCell(0);
         td1.textContent = user.name;
 
         let td2 = tr.insertCell(1);
-        let textNode = document.createTextNode(user.currentShot + "/" + user.maxShot);
+        let textNode = document.createTextNode(user.currentShot + "/ 6");
         td2.appendChild(textNode);
 
         let td3 = tr.insertCell(2);
         if (user.isDead == true) {
             td3.textContent = "умер";
+            play();
         }
-
-        console.log(select.selectedIndex);
-
     });
 
   users = data;
@@ -109,4 +107,9 @@ function userShoot() {
     })
         /*.then(response => response.json())*/
         .then(() => getUsers());
+}
+
+function play() {
+    var audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
+    audio.play();
 }

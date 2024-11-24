@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="css/site.css" />
 </head>
 <body>
-    <form action="javascript:void(0);" method="POST" onsubmit="addUser()">
+    <form class="flex-row" action="javascript:void(0);" method="POST" onsubmit="addUser()">
         <input type="text" id="add-name" placeholder="Новый игрок">
-        <input type="submit" value="Add">
+        <input type="submit" value="Добавить игрока">
     </form>
 
     <form action="javascript:void(0);" method="POST" onsubmit="startGame()">
@@ -16,7 +16,7 @@
     </form>
 
     <label>Выберите игрока: </label>
-    <form name="formUsers">
+    <form class="flex-row" name="formUsers">
         <select id="users">
         </select>
     </form>
