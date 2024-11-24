@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>BAFLB</title>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+    <form action="javascript:void(0);" method="POST" onsubmit="addUser()">
+        <input type="text" id="add-name" placeholder="Новый игрок">
+        <input type="submit" value="Add">
+    </form>
+
+    <form action="javascript:void(0);" method="POST" onsubmit="startGame()">
+        <input type="submit" id="start-game" value="Начать раунд" />
+    </form>
+
+    <label>Выберите игрока: </label>
+    <form name="formUsers">
+        <select id="users">
+            <option disabled selected>Игрок</option>
+        </select>
+    </form>
+
+    <form action="javascript:void(0);" method="POST" onsubmit="userShoot()">
+        <input type="submit" id="user-shoot" value="Нажать на курок" />
+    </form>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Shots</th>
+            <th>Is Dead?</th>
+        </tr>
+        <tbody id="users-table"></tbody>
+    </table>
+
+    <script src="js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        getUsers();
+    </script>
+</body>
+</html>
