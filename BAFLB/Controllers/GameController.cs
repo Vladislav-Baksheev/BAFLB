@@ -37,6 +37,24 @@ namespace BAFLB.Controllers
             return Ok(user);
         }
 
+        [Route("game/users/delete/{id}")]
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUser([FromRoute] int id)
+        {
+            var user = context.Users.FirstOrDefault(p => p.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            context.Users.Remove(user);
+
+            context.SaveChanges();
+
+            return Ok();
+        }
+
+
         [Route("game/users/add")]
         [HttpPost]
         public IActionResult PostUser(User user)
@@ -70,6 +88,10 @@ namespace BAFLB.Controllers
 
                 if(resultUsers != null)
                 {
+                    resultUsers.CurrentShot = 0;
+
+                    resultUsers.IsDead = false;
+
                     resultUsers.MaxShot = user.MaxShot;
 
                     context.SaveChanges();

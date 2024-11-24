@@ -1,6 +1,6 @@
 ﻿const uri = 'game/users';
 let users = [];
-
+const select = document.formUsers.users;
 function getUsers() {
   fetch(uri)
     .then(response => response.json())
@@ -31,8 +31,9 @@ function addUser() {
     .catch(error => console.error('Unable to add item.', error));
 }
 
-function deleteUser(id) {
-  fetch(`${uri}/${id}`, {
+function deleteUser() {
+    let user = users[select.selectedIndex];
+    fetch(`${uri}/delete/${user.id}`, {
     method: 'DELETE'
   })
   .then(() => getUsers())
@@ -42,10 +43,9 @@ function deleteUser(id) {
 
 function _displayUsers(data) {
     const tBody = document.getElementById('users-table');
-    console.log(tBody)
+
     tBody.innerHTML = '';
 
-  const select = document.formUsers.users; 
   const button = document.createElement('button');
     while (select.options.length > 0) {
         select.remove(0);
@@ -70,7 +70,12 @@ function _displayUsers(data) {
         td2.appendChild(textNode);
 
         let td3 = tr.insertCell(2);
-        td3.textContent = user.IsDead;
+        if (user.isDead == true) {
+            td3.textContent = "умер";
+        }
+
+        console.log(select.selectedIndex);
+
     });
 
   users = data;
@@ -87,7 +92,21 @@ function startGame() {
     })
         /*.then(response => response.json())*/
         .then(() => getUsers());
+}
+
+function userShoot() {
+    let selectedOption = select.options[select.selectedIndex];
+    let user = users[select.selectedIndex];
 
 
-
+    fetch(`game/shoot`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    })
+        /*.then(response => response.json())*/
+        .then(() => getUsers());
 }

@@ -18,9 +18,13 @@
     <label>Выберите игрока: </label>
     <form name="formUsers">
         <select id="users">
-            <option disabled selected>Игрок</option>
         </select>
     </form>
+
+    <form action="javascript:void(0);" method="POST" onsubmit="deleteUser()">
+        <input type="submit" id="user-shoot" value="Удалить игрока" />
+    </form>
+
 
     <form action="javascript:void(0);" method="POST" onsubmit="userShoot()">
         <input type="submit" id="user-shoot" value="Нажать на курок" />
@@ -28,9 +32,9 @@
 
     <table>
         <tr>
-            <th>Name</th>
-            <th>Shots</th>
-            <th>Is Dead?</th>
+            <th>Имя</th>
+            <th>Выстрелы</th>
+            <th>Смэрть</th>
         </tr>
         <tbody id="users-table"></tbody>
     </table>

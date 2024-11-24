@@ -27,6 +27,10 @@
             {
                 UserDead(user);
             }
+            if(user.CurrentShot > user.MaxShot)
+            {
+                throw new Exception();
+            }
         }
 
         private void UserDead(User user)
