@@ -25,6 +25,14 @@ namespace BAFLB.Controllers
             return Ok(users);
         }
 
+        [Route("game/round")]
+        [HttpGet]
+        public IActionResult GetRound()
+        {
+            var round = context.Rounds;
+            return Ok(round);
+        }
+
         [Route("game/users/{id}")]
         [HttpGet]
         public IActionResult GetUserById([FromRoute] int id)

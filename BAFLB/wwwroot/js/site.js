@@ -1,11 +1,20 @@
 ﻿const uri = 'game/users';
 let users = [];
 const select = document.formUsers.users;
+let round;
+
 function getUsers() {
   fetch(uri)
     .then(response => response.json())
     .then(data => _displayUsers(data))
     .catch(error => console.error('Unable to get items.', error));
+}
+
+function getRound() {
+    fetch("game/round")
+        .then(response => response.json())
+        .then(dataR => _displayRound(dataR))
+        .catch(error => console.error('Unable to get items.', error));
 }
 
 function addUser() {
@@ -50,6 +59,7 @@ function _displayUsers(data) {
     while (select.options.length > 0) {
         select.remove(0);
     }
+
     data.forEach(user => {
         
         let deleteButton = button.cloneNode(false);
@@ -72,11 +82,24 @@ function _displayUsers(data) {
         let td3 = tr.insertCell(2);
         if (user.isDead == true) {
             td3.textContent = "умер";
-            play();
+
+            var op = document.getElementById("users").getElementsByTagName("option");
+            for (var i = 0; i < op.length; i++) {
+                
+                (op[i].value.toLowerCase() == user.name)
+                    ? op[i].disabled = true
+                    : op[i].disabled = false;
+            }
         }
     });
-
+    
   users = data;
+}
+
+function _displayRound(data) {
+    const td = document.getElementById('round');
+    round = data[0];
+    td.textContent = round.name;
 }
 
 function startGame() {
@@ -89,13 +112,12 @@ function startGame() {
         body: JSON.stringify(users)
     })
         /*.then(response => response.json())*/
-        .then(() => getUsers());
+        .then(() => getUsers())
+        .then(() => getRound());
 }
 
 function userShoot() {
-    let selectedOption = select.options[select.selectedIndex];
     let user = users[select.selectedIndex];
-
 
     fetch(`game/shoot`, {
         method: 'POST',
@@ -105,11 +127,17 @@ function userShoot() {
         },
         body: JSON.stringify(user)
     })
-        /*.then(response => response.json())*/
-        .then(() => getUsers());
+        .then(response => response.text())
+        .then(() => getUsers())
+        .then(() => play());  
 }
 
 function play() {
-    var audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
-    audio.play();
+    let user = users[select.selectedIndex];
+    if (user.isDead == true) {
+        var audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
+        audio.play();
+    } 
 }
+
+

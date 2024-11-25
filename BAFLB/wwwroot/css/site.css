@@ -1,5 +1,4 @@
-﻿/* site.css */
-body {
+﻿body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(to bottom right, #ffcccb, #90caf9);
     color: #333;
@@ -61,6 +60,10 @@ table {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     overflow: hidden;
+}
+
+table.rounds{
+    width: 30%;
 }
 
 th, td {
