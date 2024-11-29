@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 // Я же говорил зарегистрировать бд как сервис и получать в конструкторе контроллера вот так
 // строку подключения можно вынести в файл конфигурации
 builder.Services.AddDbContext<ApplicationContext>(option
-    => option.UseNpgsql("Host=localhost;Port=5432;Database=baflb;Username=postgres;Password=admin"));
+    => option.UseNpgsql("Host=localhost;Port=5432;Database=baflb;Username=postgres;Password=Vladik@2003"));
 
 var app = builder.Build();
 

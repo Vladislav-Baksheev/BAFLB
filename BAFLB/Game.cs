@@ -15,6 +15,8 @@
             foreach(var user in Users)
             {
                 user.MaxShot = RandomMaxShot();
+                user.CurrentShot = 0;
+                user.IsDead = false;
             }
 
             Round.Name = RandomRound();
