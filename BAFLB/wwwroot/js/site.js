@@ -41,10 +41,9 @@ function addUser() {
     .catch(error => console.error('Unable to add item.', error));
 }
 
-function deleteUser() {
-    let user = users[select.selectedIndex];
-    fetch(`${uri}/delete/${user.id}`, {
-    method: 'DELETE'
+function deleteUser(id) {
+    fetch(`${uri}/delete/${id}`, {
+        method: 'DELETE'
   })
   .then(() => getUsers())
   .catch(error => console.error('Unable to delete item.', error));
@@ -64,7 +63,7 @@ function _displayUsers(data) {
     data.forEach(user => {
         
         let deleteButton = button.cloneNode(false);
-        deleteButton.innerText = 'Delete';
+        deleteButton.innerText = 'Удалить';
         deleteButton.setAttribute('onclick', `deleteUser(${user.id})`);
 
         const newOption = new Option(user.name, user.name);
@@ -85,12 +84,13 @@ function _displayUsers(data) {
             td3.textContent = "умер";
 
             var op = document.getElementById("users").getElementsByTagName("option");
-            for (var i = 0; i < op.length; i++) {
-                
-                (op[i].value.toLowerCase() == user.name)
-                    op[i].disabled = true;
+            if (op[select.selectedIndex].value.toLowerCase() == user.name) {
+                op[select.selectedIndex].disabled = true;
             }
+
         }
+        let td4 = tr.insertCell(3);
+        td4.appendChild(deleteButton);
     });
     select.selectedIndex = lastPlayerShoot;
     users = data;
@@ -102,6 +102,7 @@ function _displayRound(data) {
 }
 
 function startGame() {
+    
     fetch(`game/start`, {
         method: 'GET',
         headers: {
