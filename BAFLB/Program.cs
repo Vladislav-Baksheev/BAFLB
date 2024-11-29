@@ -9,8 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// � �� ������� ���������������� �� ��� ������ � �������� � ������������ ����������� ��� ���
-// ������ ����������� ����� ������� � ���� ������������
+// ТЕстовый пример
 builder.Services.AddDbContext<ApplicationContext>(option
     => option.UseNpgsql("Host=localhost;Port=5432;Database=baflb;Username=postgres;Password=admin"));
 
