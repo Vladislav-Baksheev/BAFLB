@@ -2,6 +2,7 @@
 let users = [];
 const select = document.formUsers.users;
 let round;
+let lastPlayerShoot = -1;
 
 function getUsers() {
   fetch(uri)
@@ -87,13 +88,12 @@ function _displayUsers(data) {
             for (var i = 0; i < op.length; i++) {
                 
                 (op[i].value.toLowerCase() == user.name)
-                    ? op[i].disabled = true
-                    : op[i].disabled = false;
+                    op[i].disabled = true;
             }
         }
     });
-    
-  users = data;
+    select.selectedIndex = lastPlayerShoot;
+    users = data;
 }
 
 function _displayRound(data) {
@@ -119,6 +119,7 @@ function startGame() {
 
 function userShoot() {
     let user = users[select.selectedIndex];
+    lastPlayerShoot = select.selectedIndex;
 
     fetch(`game/shoot`, {
         method: 'POST',
