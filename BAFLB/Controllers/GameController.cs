@@ -1,27 +1,32 @@
 using BAFLB.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BAFLB.Controllers
 {
     [ApiController]
     public class GameController : ControllerBase
     {
-        private Game game = new Game();
 
-        private ApplicationContext context = new ApplicationContext();
+        private readonly ApplicationContext _db;
 
         private readonly ILogger<GameController> _logger;
 
-        public GameController(ILogger<GameController> logger)
+        private Game _game = new Game();
+
+        public GameController(ILogger<GameController> logger, ApplicationContext db)
         {
             _logger = logger;
+            _db = db;
+            Console.WriteLine("Создан контроллер");
         }
 
         [Route("game/users")]
         [HttpGet]
         public IActionResult GetUsers()
         {
-            var users = context.Users;
+            var users = _db.Users.ToList();
             return Ok(users);
         }
 
@@ -29,7 +34,7 @@ namespace BAFLB.Controllers
         [HttpGet]
         public IActionResult GetRound()
         {
-            var round = context.Rounds;
+            var round = _db.Rounds;
             return Ok(round);
         }
 
@@ -37,7 +42,7 @@ namespace BAFLB.Controllers
         [HttpGet]
         public IActionResult GetUserById([FromRoute] int id)
         {
-            var user = context.Users.FirstOrDefault(p => p.Id == id);
+            var user = _db.Users.FirstOrDefault(p => p.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -49,17 +54,19 @@ namespace BAFLB.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteUser([FromRoute] int id)
         {
-            var user = context.Users.FirstOrDefault(p => p.Id == id);
+            var user = _db.Users.FirstOrDefault(p => p.Id == id);
             if (user == null)
             {
-                return NotFound();
+                // Стоит отправлять также и коммент а на клиенте парсить этот объект и выводить ошибку.
+                return NotFound(new { message = "Пользователь не найден!"});
             }
 
-            context.Users.Remove(user);
+            _db.Users.Remove(user);
 
-            context.SaveChanges();
+            _db.SaveChanges();
 
-            return Ok();
+            // То же, что и сверху
+            return Ok(new {message = "Пользователь успешно удален!"});
         }
 
 
@@ -67,32 +74,53 @@ namespace BAFLB.Controllers
         [HttpPost]
         public IActionResult PostUser(User user)
         {
-            context.Users.Add(user);
-            context.SaveChanges();
+            _db.Users.Add(user);
+            _db.SaveChanges();
+
+            // Хз канеш может и так норм, но мне кажется проще Ok отправить с текстом.
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
 
+        // Мне кажется при начале игры ты должен из базы выгражть пользователей, а не с клиента принимать.
         [Route("game/start")]
-        [HttpPost]
-        public async Task StartGame(User[] users)
+        [HttpGet]
+        public IResult StartGame()
         {
             //string updateSQL = "UPDATE users set MaxShot = @newMaxShot WHERE Name = @name;";
-            
-            game.Users = users.ToList();
-            game.StartGame();
 
-            var resultRound = (from r in context.Rounds where (r.Id == 1) select r).FirstOrDefault();
+            /*_game.Users = users.ToList();*/
+            var users = _db.Users.ToList();
 
-            if (resultRound != null)
+            _game.Users = users;
+            _game.StartGame();
+
+            _db.Rounds.Add(_game.Round);
+
+            _db.SaveChanges();
+
+            return Results.Ok(new
             {
-                resultRound.Name = game.Round.Name;
+                Users = users,
+                _game.Round
+            });
 
-                context.SaveChanges();
-            }
 
-            foreach (var user in game.Users)
+            // Переделай как я показал.
+            /*var resultRound = (from r in _db.Rounds where (r.Id == 1) select r).FirstOrDefault();*/
+
+            // А если равно Null тогда как клиент узнает, что игра не началась
+            // Надо отправить в таком случае ошибку.
+            /*if (resultRound != null)
             {
-                var resultUsers = (from r in context.Users where (r.Id == user.Id) select r).FirstOrDefault();
+                resultRound.Name = _game.Round.Name;
+
+                _db.SaveChanges();
+            }*/
+
+            /*foreach (var user in _game.Users)
+            {
+                // Тут тоже
+                var resultUsers = (from r in _db.Users where (r.Id == user.Id) select r).FirstOrDefault();
 
                 if(resultUsers != null)
                 {
@@ -102,27 +130,40 @@ namespace BAFLB.Controllers
 
                     resultUsers.MaxShot = user.MaxShot;
 
-                    context.SaveChanges();
+                    _db.SaveChanges();
                 }
-            }
+            }*/
         }
 
         [Route("game/shoot")]
         [HttpPost]
-        public async Task UserShoot(User user)
+        public IResult UserShoot([FromBody] int id)
         {
-            game.UserShoot(user);
+            var user = _db.Users.FirstOrDefault(u => u.Id == id);
 
-            var result = (from r in context.Users where (r.Id == user.Id) select r).FirstOrDefault();
-
-            if (result != null)
+            if (user == null)
             {
-                result.CurrentShot = user.CurrentShot;
-
-                result.IsDead = user.IsDead;
-
-                context.SaveChanges();
+                return Results.BadRequest(new {message = "Пользователь не найдем!"});
             }
+
+            _game.UserShoot(user);
+            _db.SaveChanges();
+
+///*//            /*var result = (from r in context.Users where (r.Id == user.Id) select r).FirstOrDefault();*//*
+////            var result = _db.Users.FirstOrDefault(r => r.Id == user.Id);*//*
+/////*
+////            if (result != null)
+////            {
+////                result.CurrentShot = user.CurrentShot;
+
+////                result.IsDead = user.IsDead;
+
+////                _db.SaveChanges();
+////            }*/
+/////*
+////            var responseUser = _db.Users.FirstOrDefault(r => r.Id == user.Id*//*);*/*/*/
+
+            return Results.Ok(user);
         }
     }
 }

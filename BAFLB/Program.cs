@@ -1,19 +1,21 @@
 using BAFLB;
 using BAFLB.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Я же говорил зарегистрировать бд как сервис и получать в конструкторе контроллера вот так
+// строку подключения можно вынести в файл конфигурации
+builder.Services.AddDbContext<ApplicationContext>(option
+    => option.UseNpgsql("Host=localhost;Port=5432;Database=baflb;Username=postgres;Password=admin"));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

@@ -98,22 +98,23 @@ function _displayUsers(data) {
 
 function _displayRound(data) {
     const td = document.getElementById('round');
-    round = data[0];
-    td.textContent = round.name;
+    td.textContent = data.name;
 }
 
 function startGame() {
     fetch(`game/start`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(users)
     })
-        /*.then(response => response.json())*/
-        .then(() => getUsers())
-        .then(() => getRound());
+        .then(response => response.json())
+        .then(json => {
+            _displayRound(json.round);
+            _displayUsers(json.users)
+        })
+
 }
 
 function userShoot() {
@@ -125,11 +126,19 @@ function userShoot() {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user.id)
     })
-        .then(response => response.text())
-        .then(() => getUsers())
-        .then(() => play());  
+        .then(response => response.json())
+        .then(json => {
+            user.currentShot = json.currentShot;
+            user.isDead = json.isDead;
+
+            if (json.isDead) {
+                play();
+            }
+
+            _displayUsers(users)
+        })
 }
 
 function play() {
