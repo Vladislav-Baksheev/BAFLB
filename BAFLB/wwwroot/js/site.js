@@ -151,4 +151,12 @@ function play() {
     } 
 }
 
-
+function closeOrDisplayInput() {
+    if (document.getElementById('editForm').style.display == 'none') {
+        document.getElementById('editForm').style.display = 'block';
+    }
+    else {
+        document.getElementById('editForm').style.display = 'none';
+    }
+    
+}

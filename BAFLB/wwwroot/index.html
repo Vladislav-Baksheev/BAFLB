@@ -13,11 +13,14 @@
         <tbody id="round-table"></tbody>
     </table>
 
-
-    <form class="flex-row" action="javascript:void(0);" method="POST" onsubmit="addUser()">
-        <input type="text" id="add-name" placeholder="Новый игрок">
-        <input type="submit" value="Добавить игрока">
-    </form>
+    <input type="submit" onclick="closeOrDisplayInput()" aria-label="Close" value="Добавление" />
+    <div id="editForm" style="display: none;">
+        <form class="flex-row" id="add-new-player" action="javascript:void(0);" method="POST" onsubmit="addUser()">
+            <input type="text" id="add-name" placeholder="Новый игрок">
+            <input type="submit" value="Добавить игрока">
+        </form>
+    </div>
+   
 
     <form action="javascript:void(0);" method="POST" onsubmit="startGame()">
         <input type="submit" id="start-game" value="Начать раунд" />
