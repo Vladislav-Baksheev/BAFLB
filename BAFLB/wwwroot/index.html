@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>BAFLB</title>
     <link rel="stylesheet" href="css/site.css" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
 </head>
 <body>
     <table id="rounds">
@@ -20,7 +21,7 @@
             <input type="submit" value="Добавить игрока">
         </form>
     </div>
-   
+
 
     <form action="javascript:void(0);" method="POST" onsubmit="startGame()">
         <input type="submit" id="start-game" value="Начать раунд" />
@@ -38,9 +39,12 @@
 
 
     <form action="javascript:void(0);" method="POST" onsubmit="userShoot()">
-        <input type="submit" id="user-shoot" value="Нажать на курок" />
+        <input type="submit" id="user-shoot" value="Нажать на курок" disabled/>
     </form>
 
+    <img src="/img/revolver_dont_shoot.png" width="600" height="200" id="img-revolver"/>
+
+    
     <table>
         <tr>
             <th>Имя</th>
@@ -54,6 +58,7 @@
     <script src="js/site.js" asp-append-version="true"></script>
     <script type="text/javascript">
         getUsers();
+        getRound();
     </script>
 </body>
 </html>

@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 // строку подключения можно вынести в файл конфигурации
 builder.Services.AddDbContext<ApplicationContext>(option
     => option.UseNpgsql("Host=localhost;Port=5432;Database=baflb;Username=postgres;Password=Vladik@2003"));
+builder.Services.AddSingleton<Game>();
 
 var app = builder.Build();
 
