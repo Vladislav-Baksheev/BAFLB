@@ -66,6 +66,7 @@ function _displayUsers(data) {
         deleteButton.innerText = 'Удалить';
         deleteButton.setAttribute('onclick', `deleteUser(${user.id})`);
 
+        
         const newOption = new Option(user.name, user.name);
 
         select.options.add(newOption);
@@ -82,12 +83,6 @@ function _displayUsers(data) {
         let td3 = tr.insertCell(2);
         if (user.isDead == true) {
             td3.textContent = "умер";
-
-            var op = document.getElementById("users").getElementsByTagName("option");
-            if (op[select.selectedIndex].value.toLowerCase() == user.name) {
-                op[select.selectedIndex].disabled = true;
-            }
-
         }
         let td4 = tr.insertCell(3);
         td4.appendChild(deleteButton);
@@ -98,7 +93,7 @@ function _displayUsers(data) {
 
 function _displayRound(data) {
     const td = document.getElementById('round');
-    td.textContent = data.name;
+    td.textContent = data[0].name;
 }
 
 function startGame() {
@@ -111,16 +106,16 @@ function startGame() {
         },
     })
         .then(response => response.json())
-        .then(json => {
-            _displayRound(json.round);
-            _displayUsers(json.users)
+        .then(() => {
+            getRound();
+            getUsers();
         })
-
 }
 
 function userShoot() {
     let user = users[select.selectedIndex];
     lastPlayerShoot = select.selectedIndex;
+
 
     fetch(`game/shoot`, {
         method: 'POST',
@@ -136,19 +131,31 @@ function userShoot() {
             user.isDead = json.isDead;
 
             if (json.isDead) {
-                play();
+                playAudioForDie();
+                changeImgToDead();
+            }
+            else {
+                playAudioForAlive()
+                changeImgToAlive();
             }
 
             _displayUsers(users)
         })
 }
 
-function play() {
+function playAudioForDie() {
     let user = users[select.selectedIndex];
     if (user.isDead == true) {
-        var audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
+        var audio = new Audio('/audio/shot.mp3');
         audio.play();
     } 
+}
+function playAudioForAlive() {
+    let user = users[select.selectedIndex];
+    if (user.isDead != true) {
+        var audio = new Audio('/audio/miss.mp3');
+        audio.play();
+    }
 }
 
 function closeOrDisplayInput() {
@@ -157,6 +164,29 @@ function closeOrDisplayInput() {
     }
     else {
         document.getElementById('editForm').style.display = 'none';
-    }
-    
+    }   
 }
+
+function changeOption() {
+    
+    const btn = document.getElementById('user-shoot');
+
+    if (users[select.selectedIndex].isDead == true) {
+        btn.disabled = true;
+    }
+    else {
+        btn.disabled = false;
+    }
+}
+
+function changeImgToDead() {
+    let img = document.getElementById('img-revolver');
+    img.src = '/img/revolver.png';
+}
+
+function changeImgToAlive() {
+    let img = document.getElementById('img-revolver');
+    img.src = '/img/revolver_dont_shoot.png';
+}
+
+select.addEventListener("change", changeOption);

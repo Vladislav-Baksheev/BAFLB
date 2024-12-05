@@ -26,10 +26,7 @@
         {
             user.CurrentShot++;
 
-            // Лучше сначала сделать проверку на неправильный случай, чтобы уменьшить количество if.
-            // Почему в коде это не обрабатывается с помощью try catch.
             // А вообще такой случай лучше обработать на фронте и просто вывести, что чел не может стрелять.
-            // Ну и здесь на всяк проверку сделать.
             if(user.CurrentShot > user.MaxShot)
             {
                 throw new Exception();
@@ -56,8 +53,8 @@
         private string RandomRound()
         {
             Random rand = new();
-            string[] round = { "ACE", "KINGS", "QUEENS" };
-            return round[rand.Next(0, 2)];
+            string[] round = { "ACES", "KINGS", "QUEENS" };
+            return round[rand.Next(0, 3)];
         }
     }
 }
