@@ -176,6 +176,7 @@ function changeOption() {
     }
     else {
         btn.disabled = false;
+        changeImgToAlive();
     }
 }
 

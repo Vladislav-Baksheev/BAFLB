@@ -23,6 +23,10 @@ namespace BAFLB.Controllers
             Console.WriteLine("Создан контроллер");
         }
 
+        /// <summary>
+        /// Получает всех пользователей.
+        /// </summary>
+        /// <returns>Пользователи.</returns>
         [Route("game/users")]
         [HttpGet]
         public IActionResult GetUsers()
@@ -31,6 +35,10 @@ namespace BAFLB.Controllers
             return Ok(users);
         }
 
+        /// <summary>
+        /// Получает текущий раунд.
+        /// </summary>
+        /// <returns>Раунд.</returns>
         [Route("game/round")]
         [HttpGet]
         public IActionResult GetRound()
@@ -39,6 +47,11 @@ namespace BAFLB.Controllers
             return Ok(round);
         }
 
+        /// <summary>
+        /// Получает пользователя по id.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>Пользователь.</returns>
         [Route("game/users/{id}")]
         [HttpGet]
         public IActionResult GetUserById([FromRoute] int id)
@@ -51,6 +64,11 @@ namespace BAFLB.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// Удаляет пользователя.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>Статус удаления.</returns>
         [Route("game/users/delete/{id}")]
         [HttpDelete("{id}")]
         public IActionResult DeleteUser([FromRoute] int id)
@@ -68,7 +86,11 @@ namespace BAFLB.Controllers
             return Ok(new {message = "Пользователь успешно удален!"});
         }
 
-
+        /// <summary>
+        /// Добавляет пользователя.
+        /// </summary>
+        /// <param name="user">Пользователь.</param>
+        /// <returns>Статус добавления пользователя.</returns>
         [Route("game/users/add")]
         [HttpPost]
         public IActionResult PostUser(User user)
@@ -80,6 +102,10 @@ namespace BAFLB.Controllers
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
 
+        /// <summary>
+        /// Начинает игру.
+        /// </summary>
+        /// <returns>Статус начала игры.</returns>
         [Route("game/start")]
         [HttpGet]
         public IResult StartGame()
@@ -104,6 +130,11 @@ namespace BAFLB.Controllers
             });
         }
 
+        /// <summary>
+        /// Обрабатывает выстрел пользователя.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>Пользователь.</returns>
         [Route("game/shoot")]
         [HttpPost]
         public IResult UserShoot([FromBody] int id)
