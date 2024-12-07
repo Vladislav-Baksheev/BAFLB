@@ -1,7 +1,5 @@
 using BAFLB.Data;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BAFLB.Controllers
 {
@@ -76,14 +74,14 @@ namespace BAFLB.Controllers
             var user = _db.Users.FirstOrDefault(p => p.Id == id);
             if (user == null)
             {
-                return NotFound(new { message = "Пользователь не найден!"});
+                return NotFound(new { message = "Пользователь не найден!" });
             }
 
             _db.Users.Remove(user);
 
             _db.SaveChanges();
 
-            return Ok(new {message = "Пользователь успешно удален!"});
+            return Ok(new { message = "Пользователь успешно удален!" });
         }
 
         /// <summary>
@@ -98,7 +96,6 @@ namespace BAFLB.Controllers
             _db.Users.Add(user);
             _db.SaveChanges();
 
-            // Хз канеш может и так норм, но мне кажется проще Ok отправить с текстом.
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
 
@@ -114,8 +111,6 @@ namespace BAFLB.Controllers
 
             _game.Users = users;
             _game.StartGame();
-
-            //_db.Rounds.Add(_game.Round);
 
             var round = _db.Rounds.First(r => r.Id == 1);
 
@@ -142,7 +137,7 @@ namespace BAFLB.Controllers
             var user = _db.Users.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
-                return Results.BadRequest(new {message = "Пользователь не найдем!"});
+                return Results.BadRequest(new { message = "Пользователь не найдем!" });
             }
 
             try

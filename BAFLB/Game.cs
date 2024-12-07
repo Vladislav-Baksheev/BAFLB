@@ -47,7 +47,6 @@
         {
             user.CurrentShot++;
 
-            // А вообще такой случай лучше обработать на фронте и просто вывести, что чел не может стрелять.
             if(user.CurrentShot > user.MaxShot)
             {
                 throw new Exception();
@@ -86,7 +85,9 @@
         private string RandomRound()
         {
             Random rand = new();
+
             string[] round = { "ACES", "KINGS", "QUEENS" };
+
             return round[rand.Next(0, 3)];
         }
     }
